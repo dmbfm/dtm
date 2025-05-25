@@ -1,4 +1,6 @@
 #![allow(dead_code, unused)]
+// DTM: Daniel`s theme manager
+//
 use std::{
     env,
     ffi::FromBytesUntilNulError,
@@ -254,7 +256,19 @@ impl LazygitTheme {
     }
 
     fn nord_light() -> Self {
-        Self::nord()
+        let pal = NordPalette::new();
+        Self {
+            active_border_color: pal.nord(14),
+            inactive_border_color: pal.nord(3),
+            options_text_color: pal.nord(2),
+            selected_line_bg_color: pal.nord(4),
+            cherry_picked_commit_bg_color: pal.nord(3),
+            cherry_picked_commit_fg_color: pal.nord(11),
+            unstaged_changes_color: pal.nord(12),
+            default_fg_color: pal.nord(0),
+            searching_active_border_color: pal.nord(15),
+            author_colors: pal.nord(14),
+        }
     }
 
     fn to_string(&self) -> String {
