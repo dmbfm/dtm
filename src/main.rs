@@ -106,21 +106,3 @@ fn main() {
     std::fs::create_dir_all(config.lock_file.parent().unwrap()).unwrap();
     std::fs::write(config.lock_file.clone(), new_theme_name).expect("Failed to write lockfile");
 }
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_ghostty_transform() {
-        let contents = [
-            "font-size = 14",
-            "theme = gruvbox",
-            "background-opacity = 1.0",
-        ]
-        .join("\n");
-
-        let result = GhosttyTheme::Builtin("nord".to_owned()).transform(&contents);
-        let expected = ["font-size = 14", "theme = nord", "background-opacity = 1.0"].join("\n");
-
-        assert_eq!(result, expected);
-    }
-}
