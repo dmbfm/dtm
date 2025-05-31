@@ -2,12 +2,18 @@
 // DTM: Daniel`s theme manager
 //
 
+mod config;
 mod ghostty_theme;
 mod helix_theme;
 mod lazygit_theme;
+mod lockfile;
 mod palette;
 mod theme;
 
+use anyhow::{Context, Result};
+use clap::{Parser, Subcommand, ValueEnum};
+use config::Config;
+use lockfile::Lockfile;
 use theme::THEMES;
 
 use crate::theme::Theme;
@@ -22,87 +28,117 @@ use std::{
     process::{self, Command},
 };
 
-#[derive(Debug)]
-struct Config {
-    ghostty_config: PathBuf,
-    helix_config: PathBuf,
-    lazygit_config: PathBuf,
-    lock_file: PathBuf,
+#[derive(Parser, Debug)]
+#[command(version, about)]
+struct Cli {
+    #[command(subcommand)]
+    subcommand: Commands,
 }
 
-impl Config {
-    fn new(
-        ghostty_config: PathBuf,
-        helix_config: PathBuf,
-        lazygit_config: PathBuf,
-        lock_file: PathBuf,
-    ) -> Self {
-        Self {
-            ghostty_config,
-            helix_config,
-            lazygit_config,
-            lock_file,
+#[derive(Subcommand, Debug)]
+enum Commands {
+    SetTheme {
+        name: String,
+    },
+    SetVariation {
+        #[arg(value_enum)]
+        variation: Variation,
+    },
+    Toggle,
+    Refresh,
+    List,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
+enum Variation {
+    Dark,
+    Light,
+}
+
+impl Cli {
+    fn set_theme(config: &Config, name: &str) -> Result<()> {
+        let theme = THEMES
+            .get(name)
+            .context(format!("Theme '{name}' not found!"))?;
+
+        theme.apply(config)?;
+
+        Lockfile {
+            theme_name: name.to_owned(),
+        }
+        .write(config)?;
+
+        Ok(())
+    }
+
+    fn set_variation(config: &Config, variation: &Variation) -> Result<()> {
+        let name = match variation {
+            Variation::Dark => &config.dark_theme,
+            Variation::Light => &config.light_theme,
+        };
+
+        Cli::set_theme(config, name)?;
+
+        Ok(())
+    }
+
+    fn toggle(config: &Config) -> Result<()> {
+        match Lockfile::read(&config) {
+            Some(lockfile) if lockfile.theme_name == config.light_theme => {
+                Self::set_theme(config, &config.dark_theme)?
+            }
+            Some(lockfile) if lockfile.theme_name == config.dark_theme => {
+                Self::set_theme(config, &config.light_theme)?
+            }
+            Some(lockfile) => {
+                println!(
+                    "The current theme, '{}', is not listed as preferred dark or light theme; setting theme to preferred dark theme.",
+                    lockfile.theme_name
+                );
+                Self::set_theme(config, &config.dark_theme)?
+            }
+            None => {
+                println!("Lockfile not present; setting theme to preferred dark theme.",);
+                Self::set_theme(config, &config.dark_theme)?
+            }
+        };
+
+        Ok(())
+    }
+
+    fn refresh(config: &Config) -> Result<()> {
+        println!("refresh");
+
+        match Lockfile::read(&config) {
+            Some(lockfile) => Self::set_theme(config, &lockfile.theme_name)?,
+            None => {
+                println!("Lockfile not present; setting theme to preferred dark theme.",);
+                Self::set_theme(config, &config.dark_theme)?
+            }
+        }
+
+        Ok(())
+    }
+
+    fn list() {
+        for (name, theme) in THEMES.iter() {
+            println!("{}", name);
         }
     }
 }
 
-impl Default for Config {
-    fn default() -> Self {
-        let home = std::env::var("HOME").unwrap();
+fn main() -> Result<()> {
+    let cli = Cli::parse();
 
-        Self {
-            ghostty_config: format!("{home}/.config/ghostty/config").into(),
-            helix_config: format!("{home}/.config/helix/config.toml").into(),
-            lazygit_config: format!("{home}/Library/Application Support/lazygit/config.yml").into(),
-            lock_file: format!("{home}/Library/Application Support/dtm/lockfile").into(),
-        }
-    }
-}
+    let config: Config = Config::default();
 
-fn main() {
-    let config = Config::default();
-
-    let first_arg = std::env::args_os()
-        .skip(1)
-        .rev()
-        .last()
-        .map(|x| x.into_string().unwrap());
-
-    let dark_theme_name = "nord";
-    let light_theme_name = "rose-pine-dawn";
-
-    let dark_theme = THEMES
-        .get(dark_theme_name)
-        .expect("Theme 'nord' not found.");
-    let light_theme = THEMES
-        .get(light_theme_name)
-        .expect("Theme 'rose-pine-dawn' not found.");
-
-    let mut current_theme_name = read_to_string(config.lock_file.clone())
-        .ok()
-        .unwrap_or("dark".to_owned())
-        .trim()
-        .to_owned();
-
-    if let Some(arg) = first_arg {
-        if arg == "light" {
-            current_theme_name = "dark".to_owned();
-        } else if arg == "dark" {
-            current_theme_name = "light".to_owned();
-        } else {
-            eprintln!("Invalid argument: {}", arg);
-            return;
-        }
-    }
-
-    let new_theme_name = if current_theme_name.trim() == "dark" {
-        light_theme.apply(&config);
-        "light"
-    } else {
-        dark_theme.apply(&config);
-        "dark"
+    match &cli.subcommand {
+        Commands::SetTheme { name } => Cli::set_theme(&config, &name)?,
+        Commands::SetVariation { variation } => Cli::set_variation(&config, variation)?,
+        Commands::Toggle => Cli::toggle(&config)?,
+        Commands::Refresh => Cli::refresh(&config)?,
+        Commands::List => Cli::list(),
     };
 
-    std::fs::create_dir_all(config.lock_file.parent().unwrap()).unwrap();
-    std::fs::write(config.lock_file.clone(), new_theme_name).expect("Failed to write lockfile");
+    return Ok(());
 }

@@ -1,3 +1,4 @@
+use anyhow::{Context, Result};
 use std::{collections::HashMap, sync::LazyLock};
 
 use crate::{
@@ -68,8 +69,10 @@ impl LazygitTheme {
         result
     }
 
-    pub fn apply(&self, config: &Config) {
+    pub fn apply(&self, config: &Config) -> Result<()> {
         let contents = self.to_string();
-        std::fs::write(config.lazygit_config.clone(), contents).unwrap();
+        std::fs::write(config.lazygit_config.clone(), contents)
+            .expect("Failed to write lazygit config file!");
+        Ok(())
     }
 }

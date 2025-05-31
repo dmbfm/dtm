@@ -1,3 +1,4 @@
+use anyhow::{Context, Result};
 use std::fs::read_to_string;
 
 use crate::Config;
@@ -8,9 +9,12 @@ pub enum HelixTheme {
 }
 
 impl HelixTheme {
-    pub fn apply(&self, config: &Config) {
-        let contents = read_to_string(config.helix_config.clone()).unwrap();
-        std::fs::write(config.helix_config.clone(), self.transform(&contents)).unwrap();
+    pub fn apply(&self, config: &Config) -> Result<()> {
+        let contents = read_to_string(config.helix_config.clone())
+            .context("Failed to read helix config file!")?;
+        std::fs::write(config.helix_config.clone(), self.transform(&contents))
+            .context("Failed to write helix config file!")?;
+        Ok(())
     }
 
     pub fn transform(&self, contents: &str) -> String {

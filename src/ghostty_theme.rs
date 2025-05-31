@@ -1,3 +1,4 @@
+use anyhow::{Context, Result};
 use std::{fs::read_to_string, io::Write, process::Command};
 
 use crate::Config;
@@ -8,11 +9,13 @@ pub enum GhosttyTheme {
 }
 
 impl GhosttyTheme {
-    pub fn apply(&self, config: &Config) -> Self {
-        let mut contents = read_to_string(config.ghostty_config.clone()).unwrap();
-        std::fs::write(config.ghostty_config.clone(), self.transform(&contents)).unwrap();
+    pub fn apply(&self, config: &Config) -> Result<Self> {
+        let mut contents = read_to_string(config.ghostty_config.clone())
+            .context("Failed to read ghostty config file!")?;
+        std::fs::write(config.ghostty_config.clone(), self.transform(&contents))
+            .context("Failed to write ghostty config!")?;
         ghostty_reload_config();
-        self.clone()
+        Ok(self.clone())
     }
 
     pub fn reload(self) -> Self {

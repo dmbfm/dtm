@@ -1,3 +1,4 @@
+use anyhow::{Context, Result};
 use std::collections::HashMap;
 use std::sync::LazyLock;
 
@@ -21,7 +22,7 @@ pub static THEMES: LazyLock<HashMap<String, Theme>> = LazyLock::new(|| {
             Theme {
                 name: "nord".to_owned(),
                 ghostty: GhosttyTheme::Builtin("nord".to_owned()),
-                helix: HelixTheme::Builtin("nord".to_owned()),
+                helix: HelixTheme::Builtin("nord-transparent".to_owned()),
                 lazygit: LazygitTheme::named("nord").unwrap(),
             },
         ),
@@ -39,7 +40,7 @@ pub static THEMES: LazyLock<HashMap<String, Theme>> = LazyLock::new(|| {
             Theme {
                 name: "rose-pine-dawn".to_owned(),
                 ghostty: GhosttyTheme::Builtin("rose-pine-dawn".to_owned()),
-                helix: HelixTheme::Builtin("rose_pine_dawn".to_owned()),
+                helix: HelixTheme::Builtin("rose-pine-dawn-transparent".to_owned()),
                 lazygit: LazygitTheme::named("rose-pine-dawn").unwrap(),
             },
         ),
@@ -47,9 +48,10 @@ pub static THEMES: LazyLock<HashMap<String, Theme>> = LazyLock::new(|| {
 });
 
 impl Theme {
-    pub fn apply(&self, config: &Config) {
-        self.ghostty.apply(config);
-        self.helix.apply(config);
-        self.lazygit.apply(config);
+    pub fn apply(&self, config: &Config) -> Result<()> {
+        self.ghostty.apply(config)?;
+        self.helix.apply(config)?;
+        self.lazygit.apply(config)?;
+        Ok(())
     }
 }
