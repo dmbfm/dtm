@@ -6,9 +6,10 @@ use crate::theme::THEMES;
 pub struct Config {
     pub light_theme: String,
     pub dark_theme: String,
-    pub ghostty_config: PathBuf,
+    pub wezterm_config: PathBuf,
     pub helix_config: PathBuf,
     pub lazygit_config: PathBuf,
+    pub wallpapers_dir: PathBuf,
     pub lock_file: PathBuf,
 }
 
@@ -16,17 +17,19 @@ impl Config {
     fn new(
         light_theme: String,
         dark_theme: String,
-        ghostty_config: PathBuf,
+        wezterm_config: PathBuf,
         helix_config: PathBuf,
         lazygit_config: PathBuf,
+        wallpapers_dir: PathBuf,
         lock_file: PathBuf,
     ) -> Self {
         Self {
             light_theme,
             dark_theme,
-            ghostty_config,
+            wezterm_config,
             helix_config,
             lazygit_config,
+            wallpapers_dir,
             lock_file,
         }
     }
@@ -37,11 +40,12 @@ impl Default for Config {
         let home = std::env::var("HOME").unwrap();
 
         Self {
-            light_theme: "rose-pine-dawn".to_owned(),
-            dark_theme: "nord".to_owned(),
-            ghostty_config: format!("{home}/.config/ghostty/config").into(),
+            light_theme: "everforest-light".to_owned(),
+            dark_theme: "everforest-dark".to_owned(),
+            wezterm_config: format!("{home}/.config/wezterm/wezterm.lua").into(),
             helix_config: format!("{home}/.config/helix/config.toml").into(),
             lazygit_config: format!("{home}/Library/Application Support/lazygit/config.yml").into(),
+            wallpapers_dir: format!("{home}/Documents/Wallpapers").into(),
             lock_file: format!("{home}/Library/Application Support/dtm/lockfile").into(),
         }
     }

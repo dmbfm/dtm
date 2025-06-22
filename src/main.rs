@@ -1,14 +1,17 @@
 #![allow(dead_code, unused)]
 // DTM: Daniel`s theme manager
 //
+// TODO:
+// - Change desktop background to match theme (i.e., add a desktop theme target)
 
 mod config;
-mod ghostty_theme;
+// mod ghostty_theme;
 mod helix_theme;
 mod lazygit_theme;
 mod lockfile;
 mod palette;
 mod theme;
+mod wezterm;
 
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand, ValueEnum};

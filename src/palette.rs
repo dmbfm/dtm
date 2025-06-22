@@ -89,5 +89,45 @@ pub static PALETTES: LazyLock<HashMap<String, Palette>> = LazyLock::new(|| {
                 purple: "#B48EAD".to_owned(),
             },
         ),
+        (
+            "everforest-dark".to_owned(),
+            Palette {
+                bg0: "#232A2E".to_owned(), // bg_dim
+                bg1: "#2D353B".to_owned(), // bg0
+                bg2: "#3D484D".to_owned(), // bg2
+                fg0: "#D3C6AA".to_owned(),
+                fg1: "#859289".to_owned(),  // Grey1
+                fg2: "#7A8478".to_owned(),  // gray0
+                sel0: "#343F44".to_owned(), //bg1
+                sel1: "#543A48".to_owned(), // bg_visual
+                sel2: "#859289".to_owned(), // Grey1
+                red: "#E67E80".to_owned(),
+                yellow: "#DBBC7F".to_owned(),
+                blue: "#7FBBB3".to_owned(),
+                green: "#A7C080".to_owned(),
+                orange: "#E69875".to_owned(),
+                purple: "#D699B6".to_owned(),
+            },
+        ),
+        (
+            "everforest-light".to_owned(),
+            Palette {
+                bg0: "#EFEBD4".to_owned(), // bg_dim
+                bg1: "#FDF6E3".to_owned(), // bg0
+                bg2: "#EFEBD4".to_owned(), // bg2
+                fg0: "#5C6A72".to_owned(),
+                fg1: "#939F91".to_owned(),  // Grey1
+                fg2: "#A6B0A0".to_owned(),  // gray0
+                sel0: "#FDF6E3".to_owned(), //bg1
+                sel1: "#EAEDC8".to_owned(), // bg_visual
+                sel2: "#939F91".to_owned(), // Grey1
+                red: "#E67E80".to_owned(),
+                yellow: "#DBBC7F".to_owned(),
+                blue: "#7FBBB3".to_owned(),
+                green: "#A7C080".to_owned(),
+                orange: "#E69875".to_owned(),
+                purple: "#D699B6".to_owned(),
+            },
+        ),
     ])
 });
