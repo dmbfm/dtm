@@ -9,6 +9,7 @@ pub struct Config {
     pub wezterm_config: PathBuf,
     pub helix_config: PathBuf,
     pub lazygit_config: PathBuf,
+    pub nushell_themes_dir: PathBuf,
     pub wallpapers_dir: PathBuf,
     pub lock_file: PathBuf,
 }
@@ -20,6 +21,7 @@ impl Config {
         wezterm_config: PathBuf,
         helix_config: PathBuf,
         lazygit_config: PathBuf,
+        nushell_themes_dir: PathBuf,
         wallpapers_dir: PathBuf,
         lock_file: PathBuf,
     ) -> Self {
@@ -31,6 +33,7 @@ impl Config {
             lazygit_config,
             wallpapers_dir,
             lock_file,
+            nushell_themes_dir,
         }
     }
 }
@@ -47,6 +50,7 @@ impl Default for Config {
             lazygit_config: format!("{home}/Library/Application Support/lazygit/config.yml").into(),
             wallpapers_dir: format!("{home}/Documents/Wallpapers").into(),
             lock_file: format!("{home}/Library/Application Support/dtm/lockfile").into(),
+            nushell_themes_dir: format!("{home}/Library/Application Support/nushell/themes").into(),
         }
     }
 }

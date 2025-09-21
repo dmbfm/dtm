@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use std::sync::LazyLock;
 
 use crate::Config;
+use crate::nushell_theme::NushellTheme;
 // use crate::ghostty_theme::GhosttyTheme;
 use crate::helix_theme::HelixTheme;
 use crate::lazygit_theme::LazygitTheme;
@@ -15,6 +16,7 @@ pub struct Theme {
     wezterm: WeztermTheme,
     helix: HelixTheme,
     lazygit: LazygitTheme,
+    nushell: NushellTheme,
 }
 
 pub static THEMES: LazyLock<HashMap<String, Theme>> = LazyLock::new(|| {
@@ -27,6 +29,7 @@ pub static THEMES: LazyLock<HashMap<String, Theme>> = LazyLock::new(|| {
                 helix: HelixTheme::Builtin("nord-transparent".to_owned()),
                 lazygit: LazygitTheme::named("nord").unwrap(),
                 wezterm: WeztermTheme::Builtin("Nord (Gogh)".to_owned()),
+                nushell: NushellTheme("nord".to_owned()),
             },
         ),
         (
@@ -36,6 +39,7 @@ pub static THEMES: LazyLock<HashMap<String, Theme>> = LazyLock::new(|| {
                 helix: HelixTheme::Builtin("nord_light".to_owned()),
                 lazygit: LazygitTheme::named("nord-light").unwrap(),
                 wezterm: WeztermTheme::Builtin("Nord Light (Gogh)".to_owned()),
+                nushell: NushellTheme("nord-light".to_owned()),
             },
         ),
         (
@@ -45,6 +49,7 @@ pub static THEMES: LazyLock<HashMap<String, Theme>> = LazyLock::new(|| {
                 helix: HelixTheme::Builtin("rose-pine-dawn-transparent".to_owned()),
                 lazygit: LazygitTheme::named("rose-pine-dawn").unwrap(),
                 wezterm: WeztermTheme::Builtin("rose-pine-dawn".to_owned()),
+                nushell: NushellTheme("rose-pine-dawn".to_owned()),
             },
         ),
         (
@@ -54,6 +59,7 @@ pub static THEMES: LazyLock<HashMap<String, Theme>> = LazyLock::new(|| {
                 wezterm: WeztermTheme::Builtin("Everforest Dark (Gogh)".to_owned()),
                 helix: HelixTheme::Builtin("everforest_dark".to_owned()),
                 lazygit: LazygitTheme::named("everforest-dark").unwrap(),
+                nushell: NushellTheme("everforest".to_owned()),
             },
         ),
         (
@@ -63,6 +69,27 @@ pub static THEMES: LazyLock<HashMap<String, Theme>> = LazyLock::new(|| {
                 wezterm: WeztermTheme::Builtin("Everforest Light (Gogh)".to_owned()),
                 helix: HelixTheme::Builtin("everforest_light".to_owned()),
                 lazygit: LazygitTheme::named("everforest-light").unwrap(),
+                nushell: NushellTheme("everforest-light".to_owned()),
+            },
+        ),
+        (
+            "catppuccin-frappe".to_owned(),
+            Theme {
+                name: "catppuccin-frappe".to_owned(),
+                wezterm: WeztermTheme::Builtin("Catppuccin Frappe".to_owned()),
+                helix: HelixTheme::Builtin("catppuccin-frappe-transparent".to_owned()),
+                lazygit: LazygitTheme::named("catppuccin-frappe").unwrap(),
+                nushell: NushellTheme("catppuccin_frappe".to_owned()),
+            },
+        ),
+        (
+            "catppuccin-latte".to_owned(),
+            Theme {
+                name: "catppuccin-latte".to_owned(),
+                wezterm: WeztermTheme::Builtin("Catppuccin Latte".to_owned()),
+                helix: HelixTheme::Builtin("catppuccin-latte-transparent".to_owned()),
+                lazygit: LazygitTheme::named("catppuccin-latte").unwrap(),
+                nushell: NushellTheme("catppuccin-latte".to_owned()),
             },
         ),
     ])
@@ -73,6 +100,7 @@ impl Theme {
         self.helix.apply(config)?;
         self.lazygit.apply(config)?;
         self.wezterm.apply(config)?;
+        self.nushell.apply(config)?;
         Ok(())
     }
 }

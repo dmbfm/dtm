@@ -27,6 +27,45 @@ pub struct Palette {
     pub purple: String,
 }
 
+impl Palette {
+    // Initializer from static strings
+    fn new(
+        bg0: &'static str,
+        bg1: &'static str,
+        bg2: &'static str,
+        fg0: &'static str,
+        fg1: &'static str,
+        fg2: &'static str,
+        sel0: &'static str,
+        sel1: &'static str,
+        sel2: &'static str,
+        red: &'static str,
+        yellow: &'static str,
+        blue: &'static str,
+        green: &'static str,
+        orange: &'static str,
+        purple: &'static str,
+    ) -> Self {
+        Palette {
+            bg0: bg0.to_owned(),
+            bg1: bg1.to_owned(),
+            bg2: bg2.to_owned(),
+            fg0: fg0.to_owned(),
+            fg1: fg1.to_owned(),
+            fg2: fg2.to_owned(),
+            sel0: sel0.to_owned(),
+            sel1: sel1.to_owned(),
+            sel2: sel2.to_owned(),
+            red: red.to_owned(),
+            yellow: yellow.to_owned(),
+            blue: blue.to_owned(),
+            green: green.to_owned(),
+            orange: orange.to_owned(),
+            purple: purple.to_owned(),
+        }
+    }
+}
+
 pub static PALETTES: LazyLock<HashMap<String, Palette>> = LazyLock::new(|| {
     HashMap::from([
         (
@@ -38,7 +77,7 @@ pub static PALETTES: LazyLock<HashMap<String, Palette>> = LazyLock::new(|| {
                 fg0: "#575279".to_owned(),
                 fg1: "#797593".to_owned(),
                 fg2: "#9893a5".to_owned(),
-                sel0: "#f4ede8".to_owned(),
+                sel0: "#cacacd".to_owned(),
                 sel1: "#dfdad9".to_owned(),
                 sel2: "#cecacd".to_owned(),
                 red: "#b4637a".to_owned(),
@@ -128,6 +167,22 @@ pub static PALETTES: LazyLock<HashMap<String, Palette>> = LazyLock::new(|| {
                 orange: "#E69875".to_owned(),
                 purple: "#D699B6".to_owned(),
             },
+        ),
+        (
+            "catppuccin-frappe".to_owned(),
+            Palette::new(
+                "#292c3c", "#303446", "#414559", "#c6d0f5", "#b5bfe2", "#a5adce", "#838ba7",
+                "#737994", "#949cbb", "#e78284", "#e5c890", "#8caaee", "#81c8be", "#ef9f76",
+                "#ca9ee6",
+            ),
+        ),
+        (
+            "catppuccin-latte".to_owned(),
+            Palette::new(
+                "#c6d0f5", "#b5bfe2", "#a5adce", "#292c3c", "#303446", "#414559", "#838ba7",
+                "#737994", "#949cbb", "#e78284", "#e5c890", "#8caaee", "#81c8be", "#ef9f76",
+                "#ca9ee6",
+            ),
         ),
     ])
 });

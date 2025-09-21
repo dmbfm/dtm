@@ -9,6 +9,7 @@ mod config;
 mod helix_theme;
 mod lazygit_theme;
 mod lockfile;
+mod nushell_theme;
 mod palette;
 mod theme;
 mod wezterm;
